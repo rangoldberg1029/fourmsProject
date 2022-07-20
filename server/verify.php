@@ -4,6 +4,8 @@ header("Access-Control-Allow-Methods:GET,POST");
 header("Access-Control-Allow-Headers:*");
 
 
+
+
 $req = json_decode(file_get_contents('php://input'), true);
 //NO EMAIL/PASSWORD SENT
 if(!isset($req)){exit("NO");}
