@@ -15,8 +15,8 @@ include "user.php";
 $post=cleanPost($req);
 $USER=new User();
 $user=$USER->verify($post["email"],$post["password"]);
-if($user===false){exit("NO");}
 
+if($user===false){exit("NO");}
 ////GENERATE JWT TOKEN
 include "private/vendor/autoload.php";
 use Firebase\JWT\JWT;
