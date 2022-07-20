@@ -27,20 +27,14 @@ function Login() {
 
     function loginSubmit(e){
         e.preventDefault()
-            axios.get("http://localhost:/fourmsProject/server/route/getUser.php",{params:{
-                email:user_login.email,
-                password:user_login.password,
-                token:localStorage.getItem("token")
-                }})
+            axios.post("http://localhost:/fourmsProject/server/verify.php",user_login)
                 .then((res)=>{
-                    if(res.data=="NO"){ alert("Invalid email/password"); }
-                     else if(res.status!=200) {
-                         alert(`Server error - ${res.status}`);
-                     }
-                     else if(res.data.length>50)  {
-                         path('/');
-                     }
-                }).catch((e)=>{
+                      if(res.status!=200) {console.log();}
+                        else{alert(`Server error - ${res.status}`);}
+                }).then((jwt)=>{
+                if (jwt=="NO") { alert("Invalid user/password"); }
+                localStorage.setItem("token", jwt);
+            }).catch((e)=>{
                 console.log(e);
             })
 

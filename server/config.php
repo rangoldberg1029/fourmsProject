@@ -12,5 +12,5 @@ define("DB_PASSWORD", '');
 // (B) JWT STUFF
 define("JWT_SECRET", "gHfKxh%zjqC7ZMKAcY@B(fC(aC0Opv9Q");
 define("JWT_ISSUER", "RAN");
-define("JWT_AUD", "fdfhgdhfdhfdsfds");
+define("JWT_AUD", "localhost");
 define("JWT_ALGO", "HS512");

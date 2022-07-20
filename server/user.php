@@ -58,7 +58,6 @@ include "config.php";
         }
 
         function get($email){
-//            $email=cleanPost($email);
             $sql="SELECT * FROM `users` where email='{$email}'";
             $this->query($sql);
             return $this->stmt;

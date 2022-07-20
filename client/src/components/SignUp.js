@@ -41,9 +41,6 @@ function SignUp() {
                 }else if(data=="NO") alert("Invalid email");
                 else{
                     localStorage.setItem("token", res.data);
-                    // let expire = new Date();
-                    // expire.setTime(expire.getTime() + (3600000)); // 1 HR FROM NOW
-                    // document.cookie = `jwt=${res.data};expires=${expire.toUTCString()}`;
                     path("/login");
                 }
             }).catch((e)=>{

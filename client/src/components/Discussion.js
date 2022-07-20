@@ -22,7 +22,8 @@ function Discussion() {
             post:discussion.post,
            parent_comment:window.localStorage.getItem("iddd"),
            date:Date.now(),
-           user:discussion.user
+           user:discussion.user,
+           token:localStorage.getItem("token")
        }
         axios.post("http://localhost:/fourmsProject/server/route/insertDiscussion.php",newDiscussion)
             .then((res)=>{

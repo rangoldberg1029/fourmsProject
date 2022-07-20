@@ -25,14 +25,7 @@ $req = json_decode(file_get_contents('php://input'), true);
              exit("User already exists");
          }
          $result= $user->save($username,$email,$password);
-         if($result){
-             $token= generateToken($username,$email);
-             setcookie("jwt", $token);
-
-//             $now = strtotime("now")+ 360000000;
-//             setcookie("jwt",$token,$now,'/') ;
-             echo $token;
-         }
+         if($result){echo true;}
          echo false;
      }
  }
