@@ -2,10 +2,12 @@ import React, {useState} from 'react';
 import axios from "axios";
 import '../css/register.css'
 import {useNavigate  } from "react-router-dom";
+import { useCookies } from 'react-cookie'
 
 function SignUp() {
     const path = useNavigate();
     const [user_signup,set_user_signup]=useState({username:'',email:'',password:'',repeatPassword:''});
+    const [cookies, setCookie] = useCookies(['access_token', 'refresh_token']);
 
     function signupStmt(e){
         const { id, value } = e.target;
@@ -32,15 +34,18 @@ function SignUp() {
         }
         axios.post("http://localhost:/fourmsProject/server/route/insertUsers.php",newUser)
             .then((res)=>{
-                // console.log(res.data);
-
+                console.log(res.data);
                 const data=res.data;
-                if(data=="Invalid email"||data=="this email already exists "){
+                if(data=="User already exists"){
                         alert(data);
-                }else{
-                  //  path("/");
+                }else if(data=="NO") alert("Invalid email");
+                else{
+                    localStorage.setItem("token", res.data);
+                    // let expire = new Date();
+                    // expire.setTime(expire.getTime() + (3600000)); // 1 HR FROM NOW
+                    // document.cookie = `jwt=${res.data};expires=${expire.toUTCString()}`;
+                    path("/login");
                 }
-
             }).catch((e)=>{
             console.log(e);
         })

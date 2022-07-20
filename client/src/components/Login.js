@@ -5,11 +5,14 @@ import {useNavigate  } from "react-router-dom";
 
 
 
+
+
 function Login() {
     const path = useNavigate();
 
     const [user_login,set_user_login]=useState({username:'',email:'',password:''});
-    const [error, setError] = useState("");
+
+
 
     function loginStmt(e){
         const { id, value } = e.target;
@@ -24,26 +27,19 @@ function Login() {
 
     function loginSubmit(e){
         e.preventDefault()
-            axios.get("http://localhost:/fourmsProject/server/route/getUser.php",{ params: {
-                    email:user_login.email,
-                    password:user_login.password
-                }
-            })
+            axios.get("http://localhost:/fourmsProject/server/route/getUser.php",{params:{
+                email:user_login.email,
+                password:user_login.password,
+                token:localStorage.getItem("token")
+                }})
                 .then((res)=>{
-                     const data=res.data;
-                     console.log(data);
-
-                    if(res.data!=""){
-                        setError("");
-                        set_user_login(data);
-                        window.localStorage.setItem("username",data.username);
-                        window.localStorage.setItem("email",data.email);
-
-                        path('/');//check how to pass user to home page
-                       // alert("The connection was successful");
-                    }else
-                    setError("email or password worng");
-
+                    if(res.data=="NO"){ alert("Invalid email/password"); }
+                     else if(res.status!=200) {
+                         alert(`Server error - ${res.status}`);
+                     }
+                     else if(res.data.length>50)  {
+                         path('/');
+                     }
                 }).catch((e)=>{
                 console.log(e);
             })
@@ -80,9 +76,7 @@ return(
                     <div className="d-flex justify-content-center links">
                         Don't have an account?  <a href="/register">Sign Up</a>
                     </div>
-                    <div>
-                        <h6 className="error">{error}</h6>
-                    </div>
+
                 </div>
             </div>
         </div>
