@@ -17,17 +17,28 @@ function Discussion() {
     }
     function submit(e){
         e.preventDefault()
-        console.log(window.localStorage.getItem("id"))
        const newDiscussion={
             post:discussion.post,
-           parent_comment:window.localStorage.getItem("iddd"),
+           parent_comment:0,
            date:Date.now(),
-           user:discussion.user,
-           token:localStorage.getItem("token")
+           user:discussion.user
        }
-        axios.post("http://localhost:/fourmsProject/server/route/insertDiscussion.php",newDiscussion)
+
+
+        axios.post("http://localhost:/fourmsProject/server/route/insertDiscussion.php",newDiscussion,{
+            headers: {
+                token:"bearer "+localStorage.getItem("token")
+            }
+        })
             .then((res)=>{
-                console.log(res.data);
+
+                const data=res.data;
+                console.log(data)
+                if(res.status===401){
+                    alert("Bad req");
+                    return;
+                }else if(data=="NO"){alert("Bad req"); return}
+                else{console.log("Good req")}
             })
     }
 
@@ -38,11 +49,7 @@ function Discussion() {
                 <h3>Community forum</h3>
                 <form >
                     <div className="form-group">
-                        <label htmlFor="usr">Write your name:</label>
-                        <input type="text" className="form-control" id="user" onChange={handelPost} value={discussion.user}></input>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="comment">Write your question:</label>
+                        <label htmlFor="comment">Write your post:</label>
                         <textarea className="form-control" rows="5" id="post" onChange={handelPost} value={discussion.post}></textarea>
                     </div>
                     <input type="submit" className="btn btn-primary" value="Send" onClick={submit}></input>

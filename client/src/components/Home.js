@@ -3,25 +3,23 @@ import { useState, useEffect } from 'react'
 import {useNavigate,useLocation  } from "react-router-dom";
 import axios from 'axios'
 import '../css/homeStyle.css'
+import Discussion from "./Discussion";
 
 
 function Home() {
     const path = useNavigate();
-    const [forum, setForum] = useState([{ id:'',post: 'Realtime fetching data', parent_comment: '', date: Date }]);
+    const [forum, setForum] = useState([{ id:'',post: 'Realtime fetching data', parent_comment: '', date: Date,user:'' }]);
     const[user,setUser]=useState({username:'',email:''})
     const [flag,setFlag]=useState(true);
+    const [deleteFlag,setDelete]=useState(false);
 
 
 
     useEffect(() => {
-        if(window.localStorage.getItem("username")!="null"){
-            const login_user={username:window.localStorage.getItem("username"),email:window.localStorage.getItem("email")};
-            setUser(login_user);
-        }
+        // if(user.username!='') setUser(obj);
         axios.get("http://localhost:/fourmsProject/server/route/getForum.php")
             .then((res) => {
                 const data = res.data;
-                console.log(data);
                 setForum(data);
 
             }).catch((err) => {
@@ -32,7 +30,7 @@ function Home() {
 
     function postData(){
         if(!flag){
-            alert("cant ")
+            alert("You need to login befor you reply ")
         }else {
             window.localStorage.setItem("iddd",forum.id)
             path("/new");
@@ -49,23 +47,24 @@ function Home() {
                     <div className="inner-sidebar">
                         <div className="inner-sidebar-header justify-content-center">
                             <button className="btn btn-primary has-icon btn-block" type="button" data-toggle="modal"
-                                    data-target="#threadModal" hidden={!flag} onClick={()=>{path("/edit")}}  >
+                                    data-target="#threadModal" disabled={!flag} onClick={()=>{path("/new")}}  >
                                 NEW DISCUSSION
                             </button>
                         </div>
+                        {deleteFlag? (<Discussion />):''}
                         <div className="simplebar-content">
                             <nav className="nav nav-pills nav-gap-y-1 flex-column">
                                 <a href="/" className="nav-link nav-link-faded has-icon active">All Threads</a>
                                 <a href="/edit" className="nav-link  has-icon ">Account</a>
-                                <button  className=" nav-link  has-icon btn btn-link " hidden={!flag} onClick={()=>{setFlag(false); setUser({username:'',email:''})}}>Logout</button>
-                                <button  className="nav-link  has-icon btn btn-link" hidden={flag} onClick={()=>{setFlag(true);path('/login')}}>Register</button>
+                                <button  className=" nav-link  has-icon btn btn-link " hidden={!flag} onClick={()=>{setFlag(false); }}>Logout</button>
+                                <button  className="nav-link  has-icon btn btn-link"  hidden={flag} onClick={()=>{setFlag(true);path('/login')}}>Register</button>
                             </nav>
                         </div>
                     </div>
 
                     <div className="inner-main" >
                         <div className="inner-main-header ">
-                            <h3>Welcome {user.username}</h3>
+                            <h3>Welcome {user.username} </h3>
                         </div>
                         <div className="panel panel-default">
                             <div className="panel-body">
@@ -84,6 +83,10 @@ function Home() {
                                     <p style={{paddingLeft:"40px"}} >
                                         {commen.post}
                                          <button className="btn btn-link" onClick={postData}> reply</button>
+                                        {commen.user === user.username ?(
+                                            <button className="btn btn-link" hidden={!deleteFlag}
+                                                    onClick={postData}> deletePost </button>
+                                        ):''}
                                     </p>
                                 </td>
                             </tr>

@@ -1,22 +1,10 @@
 <?php
+include "../discussion.php";
+header("Access-Control-Allow-Origin:*");
+header("Access-Control-Allow-Methods:GET,POST");
+header("Access-Control-Allow-Headers:*");
 
-include "../connect.php";
-$con=$_SESSION['connect'];
+$DISCUSSION=new Discussion();
+$allDiscussion=$DISCUSSION->getAll();
+echo json_encode($allDiscussion);
 
-$comments=Array();
-$sql="SELECT * FROM  `fourm`";
-if($result=mysqli_query($con,$sql)){
-    $i=0;
-    while($data=mysqli_fetch_assoc($result))
-    {
-        $comments[$i]['id']=$data['id'];
-        $comments[$i]['post']=$data['post'];
-        $comments[$i]['parent_comment']=$data['parent_comment'];
-        $comments[$i]['date']=$data['date'];
-        $i++;
-    }
-    echo json_encode($comments);
-   
-   
-  
-}
